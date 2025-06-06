@@ -28,18 +28,6 @@ public class StudentService {
     }
 
     /**
-     * Creates a new service with required repositories.
-     *
-     * @param studentRepository repository for students
-     * @param bookRepository    repository for books
-     */
-    @Autowired
-    public StudentService(StudentRepository studentRepository, BookRepository bookRepository) {
-        this.studentRepository = studentRepository;
-        this.bookRepository = bookRepository;
-    }
-
-    /**
      * Persist a new student along with its books.
      *
      * @param student entity to persist
@@ -137,10 +125,6 @@ public class StudentService {
                     return true;
                 })
                 .orElse(false);
-    }
-
-    public Optional<Book> findByStudentIdAndId(Long idS, Long idB) {
-        return bookRepository.findByStudentIdAndId(idS, idB);
     }
 
     /**
