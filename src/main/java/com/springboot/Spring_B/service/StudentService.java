@@ -21,6 +21,12 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final BookRepository bookRepository;
 
+    @Autowired
+    public StudentService(StudentRepository studentRepository, BookRepository bookRepository) {
+        this.studentRepository = studentRepository;
+        this.bookRepository = bookRepository;
+    }
+
     /**
      * Creates a new service with required repositories.
      *
@@ -41,11 +47,9 @@ public class StudentService {
      */
     @Transactional
     public Student addStudent(Student student) {
-        // ensure book list is never null to avoid NPEs
         if (student.getBooks() == null) {
             student.setBooks(new ArrayList<>());
         }
-        // link each book to its owning student
         student.getBooks().forEach(b -> b.setStudent(student));
         return studentRepository.save(student);
     }
@@ -133,6 +137,10 @@ public class StudentService {
                     return true;
                 })
                 .orElse(false);
+    }
+
+    public Optional<Book> findByStudentIdAndId(Long idS, Long idB) {
+        return bookRepository.findByStudentIdAndId(idS, idB);
     }
 
     /**
