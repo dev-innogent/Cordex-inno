@@ -16,3 +16,5 @@ The `scripts/post_summary.py` script can post a short GPT-generated summary of a
 - `SMTP_SERVER`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `EMAIL_RECIPIENT` – optional email settings
 
 Running the script will fetch PR details, execute the Maven test suite, generate a concise summary and send it to the configured destinations.
+## Drafting release notes
+Use `scripts/generate_release_notes.py` to create `RELEASE_NOTES.md` from merged pull requests. The script groups PR summaries into the same categories as the changelog.
