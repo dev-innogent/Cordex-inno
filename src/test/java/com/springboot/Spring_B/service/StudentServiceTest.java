@@ -145,4 +145,24 @@ class StudentServiceTest {
         assertEquals("N", existing.getName(), "Name should remain unchanged");
         verify(bookRepository).save(existing);
     }
+
+    @Test
+    void updateStudentByIdReturnsEmptyWhenNotFound() {
+        when(studentRepository.findById(10L)).thenReturn(Optional.empty());
+
+        Optional<Student> result = service.updateStudentById(10L, new Student());
+
+        assertTrue(result.isEmpty(), "Should return empty when student does not exist");
+        verify(studentRepository, never()).save(any());
+    }
+
+    @Test
+    void updateBookByIdReturnsEmptyWhenNotFound() {
+        when(bookRepository.findById(6L)).thenReturn(Optional.empty());
+
+        Optional<Book> result = service.updateBookById(6L, new Book());
+
+        assertTrue(result.isEmpty(), "Should return empty when book does not exist");
+        verify(bookRepository, never()).save(any());
+    }
 }
