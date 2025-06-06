@@ -7,69 +7,86 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.time.LocalDate;
 
-@Entity//It represents a table in a relational database.
-public class Book
-{
+/**
+ * Entity representing a book owned by a {@link Student}.
+ */
+@Entity
+public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)@Column(name ="id",nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id", nullable = false)
     private Long id;
     private String name;
     private String author;
-    @ManyToOne // to make relationship with another entity
-    /*It indicates that this side of the relationship should be considered the "non-owning" side
-    and should not be included when serializing to JSON.It is also used to break the loop*/
+    @ManyToOne
+    /*
+     * Mark this side as the non-owning side and omit it from serialization to
+     * prevent cycles.
+     */
     @JsonBackReference
     private Student student;
 
+    /**
+     * @return book title
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name new book title
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @return author of the book
+     */
     public String getAuthor() {
         return author;
     }
 
+    /**
+     * @param author new author
+     */
     public void setAuthor(String author) {
         this.author = author;
     }
 
+    /**
+     * @return owner student
+     */
     public Student getStudent() {
         return student;
     }
 
+    /**
+     * @param student owner student
+     */
     public void setStudent(Student student) {
         this.student = student;
     }
 
+    /**
+     * @return identifier
+     */
     public Long getId() {
         return id;
     }
 
-    /*To  remove the default representation like "com.springboot.Spring_B.entity.Book@60e1d0a0 we ovveride it as
-     and to handle StackOverFlow Exception*/
+    /*
+     * Custom toString to avoid verbose output and potential circular references
+     * when logging entities.
+     */
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.SHORT_PREFIX_STYLE)// to remove unusble code
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                 .append("Book{id = '", id)
-                .append("', name = '", name) // Prevent circular reference
+                .append("', name = '", name)
                 .append("', author = '", author)
                 .append("'}")
                 .toString();
     }
-/*
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", author='" + author + '\'' +
-                ", student=" + student +
-                '}';
-    }
- */
 }
