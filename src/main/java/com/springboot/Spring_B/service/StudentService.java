@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service layer containing business logic for managing students and books.
+ */
 @Service
 public class StudentService {
 
@@ -24,6 +27,24 @@ public class StudentService {
         this.bookRepository = bookRepository;
     }
 
+    /**
+     * Creates a new service with required repositories.
+     *
+     * @param studentRepository repository for students
+     * @param bookRepository    repository for books
+     */
+    @Autowired
+    public StudentService(StudentRepository studentRepository, BookRepository bookRepository) {
+        this.studentRepository = studentRepository;
+        this.bookRepository = bookRepository;
+    }
+
+    /**
+     * Persist a new student along with its books.
+     *
+     * @param student entity to persist
+     * @return saved student
+     */
     @Transactional
     public Student addStudent(Student student) {
         if (student.getBooks() == null) {
@@ -33,6 +54,13 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
+    /**
+     * Add a new book to a student's collection.
+     *
+     * @param id   id of the student
+     * @param book book to add
+     * @return optional containing saved book if student exists
+     */
     @Transactional
     public Optional<Book> addBook(long id, Book book) {
         return findStudentById(id).map(student -> {
@@ -42,23 +70,47 @@ public class StudentService {
         });
     }
 
+    /**
+     * Find a student by id.
+     *
+     * @param id student identifier
+     * @return optional student
+     */
     public Optional<Student> findStudentById(Long id) {
         return studentRepository.findById(id);
     }
 
+    /**
+     * Find a book by id.
+     *
+     * @param id book identifier
+     * @return optional book
+     */
     public Optional<Book> findBookById(Long id) {
         return bookRepository.findById(id);
     }
 
 
+    /**
+     * Retrieve all students.
+     */
     public List<Student> findAllStudents() {
         return studentRepository.findAll();
     }
 
+    /**
+     * Retrieve all books.
+     */
     public List<Book> findAllBooks() {
         return bookRepository.findAll();
     }
 
+    /**
+     * Delete a student and all its books if it exists.
+     *
+     * @param id student id
+     * @return {@code true} if a student was deleted
+     */
     @Transactional
     public boolean deleteStudentById(Long id) {
         if (studentRepository.existsById(id)) {
@@ -69,6 +121,13 @@ public class StudentService {
         return false;
     }
 
+    /**
+     * Delete a specific book of a student.
+     *
+     * @param idS student id
+     * @param idB book id
+     * @return {@code true} if the book was deleted
+     */
     @Transactional
     public boolean deleteBookByStudentIdAndId(Long idS, Long idB) {
         return findStudentById(idS)
@@ -84,6 +143,16 @@ public class StudentService {
         return bookRepository.findByStudentIdAndId(idS, idB);
     }
 
+    /**
+     * Retrieve a book for a given student.
+     */
+    public Optional<Book> findByStudentIdAndId(Long idS, Long idB) {
+        return bookRepository.findByStudentIdAndId(idS, idB);
+    }
+
+    /**
+     * Update mutable fields of a student.
+     */
     @Transactional
     public Optional<Student> updateStudentById(Long id, Student newStudent) {
         return findStudentById(id).map(student -> {
@@ -98,6 +167,10 @@ public class StudentService {
             return studentRepository.save(student);
         });
     }
+
+    /**
+     * Update a book entity by id.
+     */
     @Transactional
     public Optional<Book> updateBookById(Long id, Book newBook) {
         return findBookById(id).map(book -> {
