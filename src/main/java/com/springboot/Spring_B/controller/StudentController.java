@@ -8,38 +8,49 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-/*It combines the @Controller and @ResponseBody annotations, providing a convenient way to create
- RESTful APIs that return data in various formats (e.g., JSON, XML) directly to the client*/
+/**
+ * REST controller exposing CRUD operations for students and books.
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/student")
-public class StudentController
-{
+public class StudentController {
+    /** Sample endpoint used for testing the service */
     @GetMapping("/hello")
-    public String get()
-    {
+    public String get() {
         return "hello";
     }
+
+    /** Another simple endpoint returning a ResponseEntity */
     @GetMapping("/helloResponse")
-    public ResponseEntity getResponseEntity()
-    {
+    public ResponseEntity<String> getResponseEntity() {
         return ResponseEntity.ok().body("Hello Response is ok");
     }
     private final StudentService studentService;
 
+    /**
+     * Inject service dependency.
+     */
     @Autowired
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
 
-    // Add a new Student
+    /**
+     * Create a new student.
+     *
+     * @param student payload representing the student
+     * @return created student
+     */
     @PostMapping
     public ResponseEntity<Student> addStudent(@RequestBody Student student) {
         Student saved = studentService.addStudent(student);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    // Add a book to the Student
+    /**
+     * Add a book to the specified student.
+     */
     @PostMapping("/{id}/book")
     public ResponseEntity<Book> addBook(@PathVariable long id, @RequestBody Book book) {
         return studentService.addBook(id, book)
@@ -47,20 +58,26 @@ public class StudentController
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Get all students
+    /**
+     * Retrieve all students.
+     */
     @GetMapping
     public ResponseEntity<List<Student>> getStudents() {
         List<Student> students = studentService.findAllStudents();
         return ResponseEntity.ok(students);
     }
-    // Get all books
+    /**
+     * Retrieve all books.
+     */
     @GetMapping("/books")
     public ResponseEntity<List<Book>> getBooks() {
         List<Book> books = studentService.findAllBooks();
         return ResponseEntity.ok(books);
     }
 
-    // Get student by id
+    /**
+     * Retrieve a student by id.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable("id") Long id) {
         return studentService.findStudentById(id)
@@ -69,7 +86,9 @@ public class StudentController
     }
 
 
-    // Get all books of a student
+    /**
+     * Retrieve all books for a given student.
+     */
     @GetMapping("/{id}/books")
     public ResponseEntity<List<Book>> getBooksByStudentId(@PathVariable("id") Long id) {
         return studentService.findStudentById(id)
@@ -77,7 +96,9 @@ public class StudentController
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Get a particular book of a student
+    /**
+     * Retrieve a particular book for a student.
+     */
     @GetMapping("/{idS}/books/{idB}")
     public ResponseEntity<Book> getBookById(@PathVariable("idS") Long idS, @PathVariable("idB") Long idB) {
         return studentService.findByStudentIdAndId(idS, idB)
@@ -86,7 +107,9 @@ public class StudentController
     }
 
 
-    // Get book by id
+    /**
+     * Retrieve a book by id without specifying the student.
+     */
     @GetMapping("/books/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable("id") Long id) {
         return studentService.findBookById(id)
@@ -94,7 +117,9 @@ public class StudentController
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Delete a Student by id
+    /**
+     * Delete a student by id.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable("id") Long id) {
         boolean deleted = studentService.deleteStudentById(id);
@@ -104,7 +129,9 @@ public class StudentController
         return ResponseEntity.notFound().build();
     }
 
-    // Delete a particular book of a Student by id
+    /**
+     * Delete a particular book of a student.
+     */
     @DeleteMapping("/{idS}/books/{idB}")
     public ResponseEntity<String> deleteByStudentIdAndId(@PathVariable("idS") Long idS,
                                                          @PathVariable("idB") Long idB) {
@@ -115,7 +142,9 @@ public class StudentController
         return ResponseEntity.notFound().build();
     }
 
-    // Update student details
+    /**
+     * Update an existing student's details.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Student> updateStudentById(@PathVariable("id") Long id,
                                                      @RequestBody Student newStudent) {
@@ -125,7 +154,9 @@ public class StudentController
     }
 
 
-    // Update book details
+    /**
+     * Update a book's details.
+     */
     @PutMapping("/book/{id}")
     public ResponseEntity<Book> updateBookById(@PathVariable("id") Long id, @RequestBody Book newBook) {
         return studentService.updateBookById(id, newBook)

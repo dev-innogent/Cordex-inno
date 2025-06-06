@@ -4,13 +4,22 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@EnableTransactionManagement//to enable transaction management so that every transaction will complete fully not half.
+/**
+ * Application entry point. Enables transaction management for all database
+ * operations.
+ */
+@EnableTransactionManagement
 @SpringBootApplication
 public class SpringBApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SpringBApplication.class, args);
-		System.out.println("Hello Niraj");
-	}
+    /**
+     * Bootstraps the Spring application.
+     *
+     * @param args command line arguments
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(SpringBApplication.class, args);
+        System.out.println("Hello Niraj");
+    }
 
 }
