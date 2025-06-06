@@ -14,43 +14,40 @@ import java.util.Optional;
 
 @Service
 public class StudentService {
-    @Autowired
-    private StudentRepository studentRepository;
+
+    private final StudentRepository studentRepository;
+    private final BookRepository bookRepository;
 
     @Autowired
-    private BookRepository bookRepository;
+    public StudentService(StudentRepository studentRepository, BookRepository bookRepository) {
+        this.studentRepository = studentRepository;
+        this.bookRepository = bookRepository;
+    }
 
     @Transactional
-    public Student addStudent(Student student)
-    {
+    public Student addStudent(Student student) {
         if (student.getBooks() == null) {
-            student.setBooks(new ArrayList<>()); // Initialize with an empty list if it's null
+            student.setBooks(new ArrayList<>());
         }
-
-        List<Book> bookList = student.getBooks();
-        bookList.forEach(b -> b.setStudent(student)); // For each student, set the current teacher
-
-        student.setBooks(bookList); // Set the list of students for this teacher
+        student.getBooks().forEach(b -> b.setStudent(student));
         return studentRepository.save(student);
     }
 
-@Transactional
-    public Book addBook(long id, Book book) {
-        Student student = findStudentById(id);
-        if (student!= null) {
-            book.setStudent(student);//foreign key added
+    @Transactional
+    public Optional<Book> addBook(long id, Book book) {
+        return findStudentById(id).map(student -> {
+            book.setStudent(student);
             student.getBooks().add(book);
             return bookRepository.save(book);
-        }
-        return null;
+        });
     }
 
-    public Student findStudentById(Long id) {
-        return studentRepository.findById(id).orElse(null);
+    public Optional<Student> findStudentById(Long id) {
+        return studentRepository.findById(id);
     }
 
-    public Book findBookById(Long id) {
-        return bookRepository.findById(id).orElse(null);
+    public Optional<Book> findBookById(Long id) {
+        return bookRepository.findById(id);
     }
 
 
@@ -64,40 +61,32 @@ public class StudentService {
 
     @Transactional
     public boolean deleteStudentById(Long id) {
-        try {
+        if (studentRepository.existsById(id)) {
             bookRepository.deleteByStudentId(id);
             studentRepository.deleteById(id);
             return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Transactional
-    public boolean deleteBookByStudentIdAndId(Long idS, Long idB) {
-        Student student = findStudentById(idS);
-        if(student != null)
-        {
-            Book book = findBookById(idB);
-            if(book != null)
-            {
-                bookRepository.delete(book);
-                return  true;
-            }
         }
         return false;
     }
 
-    public Book findByStudentIdAndId(Long idS, Long idB)// here first parameter is book id mind it
-    {
-        return bookRepository.findByStudentIdAndId(idS, idB).orElse(null);
+    @Transactional
+    public boolean deleteBookByStudentIdAndId(Long idS, Long idB) {
+        return findStudentById(idS)
+                .flatMap(s -> findBookById(idB))
+                .map(b -> {
+                    bookRepository.delete(b);
+                    return true;
+                })
+                .orElse(false);
+    }
+
+    public Optional<Book> findByStudentIdAndId(Long idS, Long idB) {
+        return bookRepository.findByStudentIdAndId(idS, idB);
     }
 
     @Transactional
-    public Student updateStudentById(Long id, Student newStudent)// here first parameter is book id mind it
-    {
-        Student student = findStudentById(id);
-        if (student != null) {
+    public Optional<Student> updateStudentById(Long id, Student newStudent) {
+        return findStudentById(id).map(student -> {
             if (newStudent.getName() != null)
                 student.setName(newStudent.getName());
             if (newStudent.getEmail() != null)
@@ -106,23 +95,18 @@ public class StudentService {
                 student.setDob(newStudent.getDob());
             if (newStudent.getBooks() != null)
                 student.setBooks(newStudent.getBooks());
-            studentRepository.save(student);
-            return student;
-        }
-        return null;
+            return studentRepository.save(student);
+        });
     }
-@Transactional
-    public Book updateBookById(Long id, Book newBook)// here first parameter is book id mind it
-    {
-        Book book = findBookById(id);
-        if (book != null) {
+    @Transactional
+    public Optional<Book> updateBookById(Long id, Book newBook) {
+        return findBookById(id).map(book -> {
             if (newBook.getAuthor() != null)
                 book.setAuthor(newBook.getAuthor());
             if (newBook.getName() != null)
                 book.setName(newBook.getName());
             return bookRepository.save(book);
-        } else
-            return null;
+        });
     }
 }
 
