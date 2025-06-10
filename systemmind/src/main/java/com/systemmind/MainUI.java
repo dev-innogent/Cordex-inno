@@ -13,25 +13,34 @@ public class MainUI extends Application {
     @Override
     public void start(Stage stage) {
         TextArea input = new TextArea();
+        input.setPromptText("Enter command...");
+        TextArea output = new TextArea();
+        output.setEditable(false);
+
         Button run = new Button("Execute");
-        run.setOnAction(e -> handleCommand(input.getText()));
+        run.setOnAction(e -> handleCommand(input.getText(), output));
+
         BorderPane root = new BorderPane(input);
         root.setBottom(run);
+        root.setRight(output);
         stage.setTitle("SystemMind AI");
         stage.setScene(new Scene(root, 600, 400));
         stage.show();
     }
 
-    private void handleCommand(String text) {
+    private void handleCommand(String text, TextArea outputArea) {
         Command cmd = CommandParser.parse(text);
         if (cmd == null) {
-            logger.log("Could not understand: " + text);
+            String msg = "Could not understand: " + text;
+            outputArea.appendText(msg + System.lineSeparator());
+            logger.log(msg);
             return;
         }
         boolean approved = PermissionDialog.ask(cmd.description());
         if (approved) {
             String result = SystemExecutor.execute(cmd);
             logger.log(cmd.description() + " => " + result);
+            outputArea.appendText(result + System.lineSeparator());
         }
     }
 
