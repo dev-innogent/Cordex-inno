@@ -7,14 +7,17 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+// client for OpenRouter AI
+import com.systemmind.AIClient;
+
 public class MainUI extends Application {
     private final Logger logger = new Logger();
     private final VoiceModule voice = new VoiceModule();
-    private AICommandService ai;
+    private AIClient ai;
 
     @Override
     public void start(Stage stage) {
-        ai = new AICommandService(System.getenv("GEMINI_API_KEY"));
+        ai = new AIClient(System.getenv("OPENROUTER_API_KEY"));
 
         TextArea input = new TextArea();
         input.setPromptText("Enter command...");

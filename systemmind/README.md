@@ -17,10 +17,10 @@ Verify installation with `mvn -version`.
 mvn package
 ```
 
-Before running you must provide a Google Generative AI key via the `GEMINI_API_KEY` environment variable so `AICommandService` can contact the API. The application targets the free `chat-bison-001` model to avoid access issues. For example:
+Before running you must provide an OpenRouter API key via the `OPENROUTER_API_KEY` environment variable so `AIClient` can contact the service. For example:
 
 ```bash
-export GEMINI_API_KEY=AIzaSyC-Ne06g37yg2Cptgqhy9dw9jofYsYN2kk
+export OPENROUTER_API_KEY=sk-or-example
 ```
 
 Run the application with:

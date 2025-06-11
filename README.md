@@ -12,7 +12,7 @@ sudo apt-get update && sudo apt-get install -y maven
 
 After installation verify it with `mvn -version` before running Maven commands like `mvn test`.
 
-The `systemmind` module integrates with an online Google AI service. Set a `GEMINI_API_KEY` environment variable before running it so the application can contact the API. It uses the free `chat-bison-001` model instead of `gemini-pro` to avoid access errors. If you want to test quickly you can use the example key `AIzaSyC-Ne06g37yg2Cptgqhy9dw9jofYsYN2kk`.
+The `systemmind` module relies on the OpenRouter AI chat API. Set an `OPENROUTER_API_KEY` environment variable so it can request commands from the model. For quick testing you may use a key like `sk-or-example` but you should replace it with your own.
 
 ## Database
 
