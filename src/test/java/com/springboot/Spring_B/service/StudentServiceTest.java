@@ -165,4 +165,58 @@ class StudentServiceTest {
         assertTrue(result.isEmpty(), "Should return empty when book does not exist");
         verify(bookRepository, never()).save(any());
     }
+
+    @Test
+    void findStudentByIdDelegatesToRepository() {
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
+
+        Optional<Student> result = service.findStudentById(1L);
+
+        assertTrue(result.isPresent());
+        verify(studentRepository).findById(1L);
+    }
+
+    @Test
+    void findBookByIdDelegatesToRepository() {
+        Book book = new Book();
+        when(bookRepository.findById(2L)).thenReturn(Optional.of(book));
+
+        Optional<Book> result = service.findBookById(2L);
+
+        assertTrue(result.isPresent());
+        verify(bookRepository).findById(2L);
+    }
+
+    @Test
+    void findAllStudentsReturnsRepositoryList() {
+        List<Student> students = Collections.singletonList(student);
+        when(studentRepository.findAll()).thenReturn(students);
+
+        List<Student> result = service.findAllStudents();
+
+        assertSame(students, result);
+        verify(studentRepository).findAll();
+    }
+
+    @Test
+    void findAllBooksReturnsRepositoryList() {
+        List<Book> books = List.of(new Book());
+        when(bookRepository.findAll()).thenReturn(books);
+
+        List<Book> result = service.findAllBooks();
+
+        assertSame(books, result);
+        verify(bookRepository).findAll();
+    }
+
+    @Test
+    void findByStudentIdAndIdReturnsBook() {
+        Book book = new Book();
+        when(bookRepository.findByStudentIdAndId(1L, 2L)).thenReturn(Optional.of(book));
+
+        Optional<Book> result = service.findByStudentIdAndId(1L, 2L);
+
+        assertTrue(result.isPresent());
+        verify(bookRepository).findByStudentIdAndId(1L, 2L);
+    }
 }
