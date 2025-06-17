@@ -3,7 +3,6 @@ package com.springboot.Spring_B.controller;
 import com.springboot.Spring_B.entity.Book;
 import com.springboot.Spring_B.entity.Student;
 import com.springboot.Spring_B.service.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -12,14 +11,24 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/students")
 @CrossOrigin(origins = "*")
+/**
+ * REST controller exposing CRUD operations with additional exception handling.
+ */
 public class NewStudentController {
-    @Autowired
-    private StudentService studentService;
+    private final StudentService studentService;
+
+    /**
+     * Creates a new controller with the required service dependency.
+     *
+     * @param studentService service used to perform business operations
+     */
+    public NewStudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -44,14 +53,25 @@ public class NewStudentController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
     }
 
-    //for adding a Student
+    /**
+     * Create a new student entity.
+     *
+     * @param student payload representing the student
+     * @return the created student
+     */
     @PostMapping
     public ResponseEntity<Student> addStudent(@RequestBody Student student) {
         Student addedStudent = studentService.addStudent(student);
         return ResponseEntity.ok(addedStudent);
     }
 
-    //for adding a Book in a Student List of books
+    /**
+     * Add a book to a student's collection.
+     *
+     * @param id   student identifier
+     * @param book book to add
+     * @return created book or NOT_FOUND when the student does not exist
+     */
     @PostMapping("/{id}/book")
     public ResponseEntity<Book> addBook(@PathVariable long id, @RequestBody Book book) {
         return studentService.addBook(id, book)
@@ -60,7 +80,9 @@ public class NewStudentController {
                         "Book is not added bcz of invalid Id."));
     }
 
-    //for getting All Students
+    /**
+     * Retrieve all students.
+     */
     @GetMapping
     public ResponseEntity<List<Student>> findAllStudents() {
         List<Student> students = studentService.findAllStudents();
@@ -68,7 +90,9 @@ public class NewStudentController {
 
     }
 
-    //for getting All books
+    /**
+     * Retrieve all books in the system.
+     */
     @GetMapping("/books")
     public ResponseEntity<List<Book>> getBooks() {
         List<Book> books;
@@ -76,7 +100,9 @@ public class NewStudentController {
         return ResponseEntity.ok(books);
     }
 
-    //for finding the Student by id
+    /**
+     * Retrieve a student by id.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Student> findStudentById(@PathVariable("id") Long id) {
         return studentService.findStudentById(id)
@@ -85,7 +111,9 @@ public class NewStudentController {
                         "Student is not Found."));
     }
 
-    //for finding all Books of a particular Student\
+    /**
+     * Retrieve all books for a given student.
+     */
     @GetMapping("/{id}/books")
     public ResponseEntity<List<Book>> getBooksByStudentId(@PathVariable("id") Long id) {
         return studentService.findStudentById(id)
@@ -94,7 +122,9 @@ public class NewStudentController {
                         "Student not Found on this id."));
     }
 
-    //for finding a particular book of a Student by book id
+    /**
+     * Retrieve a particular book of a student by book id.
+     */
     @GetMapping("/{idS}/books/{idB}")
     public ResponseEntity<Book> getBookById(@PathVariable("idS") Long idS, @PathVariable("idB") Long idB) {
         return studentService.findByStudentIdAndId(idS, idB)
@@ -104,7 +134,9 @@ public class NewStudentController {
 
     }
 
-    //for finding the book by id
+    /**
+     * Retrieve a book by its id.
+     */
     @GetMapping("/books/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable("id") Long id) {
         return studentService.findBookById(id)
@@ -113,7 +145,9 @@ public class NewStudentController {
                         "Book is not Found."));
     }
 
-    // delete a particular Student by its id
+    /**
+     * Delete a particular student by its id.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteStudentById(@PathVariable("id") Long id) {
         boolean isDelete = studentService.deleteStudentById(id);
@@ -123,17 +157,21 @@ public class NewStudentController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not Exists.");
     }
 
-    // delete a particular book of a Student by its book id
+    /**
+     * Delete a particular book of a student by its id.
+     */
     @DeleteMapping("/{idS}/books/{idB}")
     public ResponseEntity<String> deleteBookByStudentIdAndId(@PathVariable("idS") Long idS, @PathVariable("idB") Long idB) {
-       // try{
-      boolean isDeleted =  studentService.deleteBookByStudentIdAndId(idS, idB);
-      if(isDeleted)
+        boolean isDeleted = studentService.deleteBookByStudentIdAndId(idS, idB);
+        if (isDeleted)
             return ResponseEntity.ok("Book is deleted");
-        else  throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book isn't deleted, Check inputs.");
+        else
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book isn't deleted, Check inputs.");
     }
 
-    // update student details which we want to update by its id.
+    /**
+     * Update student details.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Student> updateStudentById(@PathVariable("id") Long id, @RequestBody Student newStudent) {
         return studentService.updateStudentById(id, newStudent)
@@ -142,7 +180,9 @@ public class NewStudentController {
                         "Student is not Found."));
     }
 
-    // update student's book details which we want to update by book id.
+    /**
+     * Update a student's book.
+     */
     @PutMapping("/book/{id}")
     public ResponseEntity<Book> updateBookById(@PathVariable("id") Long id, @RequestBody Book newBook) {
         return studentService.updateBookById(id, newBook)

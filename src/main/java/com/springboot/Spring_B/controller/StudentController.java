@@ -15,17 +15,6 @@ import java.util.List;
 @CrossOrigin("*")
 @RequestMapping("/student")
 public class StudentController {
-    /** Sample endpoint used for testing the service */
-    @GetMapping("/hello")
-    public String get() {
-        return "hello";
-    }
-
-    /** Another simple endpoint returning a ResponseEntity */
-    @GetMapping("/helloResponse")
-    public ResponseEntity<String> getResponseEntity() {
-        return ResponseEntity.ok().body("Hello Response is ok");
-    }
     private final StudentService studentService;
 
     /**

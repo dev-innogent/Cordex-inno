@@ -2,6 +2,7 @@ package com.springboot.Spring_B.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.Spring_B.entity.Student;
+import com.springboot.Spring_B.entity.Book;
 import com.springboot.Spring_B.service.StudentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -34,19 +36,6 @@ class StudentControllerTest {
     @MockBean
     private StudentService studentService;
 
-    @Test
-    void helloEndpointReturnsPlainText() throws Exception {
-        mockMvc.perform(get("/student/hello"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("hello"));
-    }
-
-    @Test
-    void helloResponseEndpointReturnsOk() throws Exception {
-        mockMvc.perform(get("/student/helloResponse"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Hello Response is ok"));
-    }
 
     @Test
     void addStudentReturnsCreatedStudent() throws Exception {
@@ -82,4 +71,34 @@ class StudentControllerTest {
         mockMvc.perform(delete("/student/2"))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void getStudentsReturnsList() throws Exception {
+        when(studentService.findAllStudents()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/student"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void getBooksReturnsList() throws Exception {
+        when(studentService.findAllBooks()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/student/books"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void updateBookByIdReturnsUpdatedBook() throws Exception {
+        Book book = new Book();
+        when(studentService.updateBookById(eq(1L), any(Book.class))).thenReturn(Optional.of(book));
+
+        mockMvc.perform(put("/student/book/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(book)))
+                .andExpect(status().isOk());
+    }
 }
+
