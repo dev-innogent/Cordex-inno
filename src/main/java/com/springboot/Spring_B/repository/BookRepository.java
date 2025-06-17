@@ -1,3 +1,6 @@
+/*
+ * Spring Data repository for Book entities.
+ */
 package com.springboot.Spring_B.repository;
 
 import com.springboot.Spring_B.entity.Book;
