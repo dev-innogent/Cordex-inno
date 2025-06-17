@@ -2,6 +2,7 @@ package com.springboot.Spring_B.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.Spring_B.entity.Student;
+import com.springboot.Spring_B.entity.Book;
 import com.springboot.Spring_B.service.StudentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -81,5 +83,26 @@ class StudentControllerTest {
 
         mockMvc.perform(delete("/student/2"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getStudentsReturnsListOfStudents() throws Exception {
+        Student student = new Student("Jane","jane@example.com", LocalDate.now(), Collections.emptyList());
+        when(studentService.findAllStudents()).thenReturn(Collections.singletonList(student));
+
+        mockMvc.perform(get("/student"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(Collections.singletonList(student))));
+    }
+
+    @Test
+    void addBookReturnsCreatedWhenStudentExists() throws Exception {
+        Book book = new Book();
+        when(studentService.addBook(eq(1L), any(Book.class))).thenReturn(Optional.of(book));
+
+        mockMvc.perform(post("/student/1/book")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(book)))
+                .andExpect(status().isCreated());
     }
 }
