@@ -29,9 +29,10 @@ public class StudentController {
     private final StudentService studentService;
 
     /**
-     * Inject service dependency.
+     * Constructs the controller with the required service.
+     *
+     * @param studentService business service
      */
-    @Autowired
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
