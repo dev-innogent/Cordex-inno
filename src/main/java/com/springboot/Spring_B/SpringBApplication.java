@@ -1,3 +1,6 @@
+/*
+ * Application bootstrap for the Spring Boot demo.
+ */
 package com.springboot.Spring_B;
 
 import org.springframework.boot.SpringApplication;

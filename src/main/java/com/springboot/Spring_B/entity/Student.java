@@ -1,3 +1,6 @@
+/*
+ * JPA entity representing application students.
+ */
 package com.springboot.Spring_B.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;

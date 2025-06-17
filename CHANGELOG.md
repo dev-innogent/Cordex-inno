@@ -13,3 +13,6 @@
 ## Other
 - first commit
 
+
+## Removed
+- Delete deprecated NewStudentController and add module summaries (#13)

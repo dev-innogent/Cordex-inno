@@ -1,3 +1,6 @@
+/*
+ * Persistent representation of books owned by students.
+ */
 package com.springboot.Spring_B.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;

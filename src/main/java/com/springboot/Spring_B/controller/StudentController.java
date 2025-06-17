@@ -1,3 +1,6 @@
+/*
+ * REST endpoints for managing students and books.
+ */
 package com.springboot.Spring_B.controller;
 
 import com.springboot.Spring_B.entity.Book;

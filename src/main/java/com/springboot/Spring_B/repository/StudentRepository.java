@@ -1,3 +1,6 @@
+/*
+ * JPA repository for Student entities.
+ */
 package com.springboot.Spring_B.repository;
 
 import com.springboot.Spring_B.entity.Student;

@@ -1,3 +1,6 @@
+/*
+ * Business logic for managing students and their books.
+ */
 package com.springboot.Spring_B.service;
 
 import com.springboot.Spring_B.entity.Book;
