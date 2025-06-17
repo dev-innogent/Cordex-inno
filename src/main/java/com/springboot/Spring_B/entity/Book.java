@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.time.LocalDate;
 
 /**
  * Entity representing a book owned by a {@link Student}.

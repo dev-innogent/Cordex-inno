@@ -5,7 +5,6 @@ import com.springboot.Spring_B.entity.Student;
 import com.springboot.Spring_B.repository.BookRepository;
 import com.springboot.Spring_B.repository.StudentRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final BookRepository bookRepository;
 
-    @Autowired
     public StudentService(StudentRepository studentRepository, BookRepository bookRepository) {
         this.studentRepository = studentRepository;
         this.bookRepository = bookRepository;
