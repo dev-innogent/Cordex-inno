@@ -1,0 +1,75 @@
+Header:
+You are a senior software engineer with expertise in Java and the Spring Boot framework. Perform the following tasks on this codebase:
+Input: A valid PR URL or number must be provided to load the diff context (e.g., `PR: https://github.com/dev-innogent/Cordex-inno/pull/20`)
+
+1. Code Refactoring
+Improve code structure, readability, and maintainability without changing functionality
+Apply best practices for:
+Language: Java
+Framework: Spring Boot
+Refactoring scope:
+Eliminate duplicated code and redundant conditionals
+Improve method and class naming
+Decompose large methods or controllers into smaller units
+Normalize dependency injection (constructor over field injection)
+Apply SOLID principles where applicable
+Remove dead code, unused imports, and outdated annotations
+Ensure consistency in formatting and package structure
+
+2. Inline & Module-Level Documentation
+Add JavaDoc comments for:
+Public classes, interfaces, and methods
+Key business logic and service layer functions
+Include a module-level summary at the top of each file
+Use the standard JavaDoc format:
+
+/**
+ * Explains what this class or method does.
+ *
+ * @param param Description of the parameter.
+ * @return Description of the return value.
+ */
+
+3. Unit Test Generation
+Create unit tests for all public methods in:
+Controllers
+Services
+Utilities
+Use JUnit 5 (or JUnit 4 if the project uses it)
+Use Mockito for mocking dependencies and isolation
+Follow test naming conventions (e.g., shouldProcessRequest_whenInputIsValid)
+Cover normal logic paths and edge cases
+Place test classes under src/test/java matching package structure
+
+4. Changelog Generation
+Generate a structured changelog entry for the latest update
+Use Keep a Changelog format in markdown
+Include relevant sections:
+### Added
+### Changed
+### Fixed
+### Removed
+Follow Conventional Commits style in commit messages:
+feat: add support for user registration
+fix: handle null pointer in email service
+
+5. Pull Request Review
+- **Only review the code changes present in the PR diff — not the full codebase.**
+- Analyze the diff from the specified pull request and simulate detailed reviewer feedback
+- Leave inline-style comments as a code reviewer would
+
+Focus on:
+-  Performance risks or bottlenecks
+-  Unhandled exceptions or missing input validations
+-  Misuse of Spring Boot annotations, dependency injection, or lifecycle patterns
+-  Violations of clean architecture or service-controller layering
+-  Opportunities for improved design, modularity, or logic clarity
+-  Test coverage gaps or risky untested changes
+
+Keep comments:
+- Precise and constructive
+- Aligned with Java + Spring Boot best practices
+- Limited to only the code that changed in the PR diff
+
+Footer:
+Apply all changes directly to the codebase. Ensure everything is well-documented, tested, and production-ready. Do not introduce new features.
